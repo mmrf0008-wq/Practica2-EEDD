@@ -17,7 +17,7 @@ private:
     public:
         T dato;
         Nodo *ant,*sig;
-        Nodo(T &dato, Nodo *ant, Nodo *sig):
+        Nodo(const T &dato, Nodo *ant, Nodo *sig):
                 dato(dato),ant(ant),sig(sig){}
     };
 
@@ -38,6 +38,7 @@ public:
                 return false;
             }
         }
+
         bool haySiguiente() {               //Comprobar si existe un nodo siguiente
             if (nodo->sig != 0) {
                 return true;
@@ -45,12 +46,15 @@ public:
                 return false;
             }
         }
+
         void anterior() {               //Desplaza el iterador una posicion hacia atrás. Puntero nodo apunta al nodo anterior
             nodo = nodo->ant;
         }
+
         void siguiente() {              //Desplaza el iterador una posicion hacia delante. Puntero nodo apunta al nodo siguiente
             nodo = nodo->sig;
         }
+
         T &dato() {                    //Devuelve el contenido del nodo
             return nodo->dato;
         }
@@ -133,15 +137,93 @@ public:
      */
     int tam();
 
-    //No me acuerdo de cual era la diferencia de ambos xd
-    ListaDE<T> concatena(const ListaDE<T> &lista);
-    ListaDE<T> operator+(const ListaDE<T> &lista);
+
+    ListaDE<T> concatena(const ListaDE<T> &lista);      //Devuelve una copia de las dos listas unidas
+    ListaDE<T> operator+(const ListaDE<T> &lista);      //A la primera lista le agrego la segunda lista
 
     /**
      * @brief Destructor de la clase ListaDE
      */
     ~ListaDE();
 };
+
+template<typename T>
+T& ListaDE<T>::inicio() {
+    if (cabecera==nullptr) {
+        throw invalid_argument("[ListaDE::inicio]: La lista esta vacia");
+    }
+    return cabecera->dato;
+}
+
+template<typename T>
+T& ListaDE<T>::fin() {
+    if (cola==nullptr) {
+        throw invalid_argument("[ListaDE::fin]: La lista esta vacia");
+    }
+    return cola->dato;
+}
+
+template<typename T>
+void ListaDE<T>::insertaInicio(const T& dato) {
+    Nodo *p = new Nodo(dato,0,0);
+
+    if (cola==nullptr) {
+        cabecera = p;
+        cola=p;
+    } else {
+        p->sig=cabecera;
+        cabecera->ant=p;
+        cabecera=p;
+        p=nullptr;
+    }
+
+}
+
+template<typename T>
+void ListaDE<T>::insertaFin(const T &dato) {
+    Nodo *p = new Nodo(dato,0,0);
+
+    if (cola==nullptr) {
+        cabecera = p;
+        cola=p;
+    } else {
+        p->ant=cola;
+        cola->sig=p;
+        cola=p;
+        p=nullptr;
+    }
+}
+
+template<typename T>
+void ListaDE<T>::inserta(const Iterador &i, const T &dato) {
+    Nodo *p = new Nodo(dato,0,0);
+    if (i.nodo==nullptr) {
+        throw invalid_argument("[ListaDE::inserta]: Parametro no valido");
+    }
+    if (cabecera==nullptr) {
+        cabecera=p;
+        cola=p;
+
+    } else if (i.nodo==cabecera) {
+        cabecera->ant=p;
+        p->sig=cabecera;
+        cabecera=p;
+
+        } else if (i.nodo==cola) {
+            Nodo *t = cola->ant;
+            cola->ant=p;
+            p->sig=cola;
+            p->ant=t;
+            t->sig=p;
+
+            } else {
+                Nodo *t = i.nodo->ant;
+                i.nodo->ant=p;
+                p->sig=i.nodo;
+                p->ant=t;
+                t->sig=p;
+            }
+}
 
 
 
