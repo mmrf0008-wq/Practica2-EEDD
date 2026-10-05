@@ -3,11 +3,11 @@
 
 #include "ControlParques.h"
 #include "LectorCSV.h"
-#include "ListaDEnlazada.h"
+#include "ListaDE.h"
 #include "Parque.h"
 
 template <class T>
-void mostrarLista(ListaDEnlazada<T> l)
+void mostrarLista(ListaDE<T> l)
 {
     for (Iterador<T> it = l.iterador(); !it.fin(); it.avanza())
     {
@@ -17,7 +17,7 @@ void mostrarLista(ListaDEnlazada<T> l)
 }
 
 
-Iterador<Parque> buscaParque(ListaDEnlazada<Parque>& lista, string nombre)
+Iterador<Parque> buscaParque(ListaDE<Parque>& lista, string nombre)
 {
     Iterador<Parque> it = lista.iterador();
     for (it; !it.fin(); it.avanza())
@@ -66,7 +66,7 @@ int main()
     cout << "PROGRAMA DE PRUEBA 1" << endl;
 
     //Crear la lista vacía
-    ListaDEnlazada<int> lista;
+    ListaDE<int> lista;
 
     cout<<"Insetar al final del 101 al 200"<<endl;
 
@@ -116,7 +116,7 @@ int main()
 
     //Variables fuera del bucle por eficiencia
     VDinamico<Especie>* especies = &cp.get_varieties();
-    ListaDEnlazada<Parque>* parques = &cp.get_parks();
+    ListaDE<Parque>* parques = &cp.get_parks();
 
     for (int i = 0; i < especies->gettLogico(); ++i)
     {

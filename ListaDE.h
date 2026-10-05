@@ -8,15 +8,13 @@
 template<class T>
 class ListaDE {
 private:
-    template<class X>       //Cambiar la letra del template
-    class Nodo {            //Meter la clase nodo dentro de la clase listaDE
-    public:
-        X dato;
-        Nodo *ant, *sig;
-        Nodo(const X &dato, Nodo *ant, Nodo *sig);
-        ~Nodo();
+
+    template<class X>
+    class Nodo {
     };
+
 public:
+
     template<class Y>
     class Iterador {
 
@@ -26,5 +24,13 @@ public:
 
 };
 
+/*  Metodo borrar,orden corecto
+ *if p.nodo!=0 && cabecera !=0
+ *  else if Cabecera==cola
+ *      else if p.nodo==cabecera
+ *          else if p.nodo==cola
+ *              else
+ */
 
+//
 #endif //PRACTICA2_EEDD_LISTADE_H
