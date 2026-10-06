@@ -147,6 +147,67 @@ public:
     ~ListaDE();
 };
 
+template<class T>
+ListaDE<T>::ListaDE(const ListaDE<T> &orig) {       //Comprobamos si la lista está vacía
+    if (orig.cabecera == nullptr) {
+        this->cabecera = nullptr;
+        this->cola = nullptr;
+
+    } else if (orig.cabecera == orig.cola) {            //Comprobamos si hay un solo elemento en la lista
+        this->cabecera = new Nodo(orig.cabecera->dato,0,0);
+        this->cola = cabecera;
+
+    } else {
+        this->cabecera = new Nodo(orig.cabecera->dato,0,0);
+        this->cola = cabecera;
+        Iterador i = orig.cabecera->sig;
+
+        while (i.haySiguiente()) {      //La condicion deja fuera al ultimo dato
+            insertaFin(i.dato());
+            i.siguiente();
+        }
+        insertaFin(i.dato());       //El ultmo dato hay que hacerlo aparte
+    }
+}
+
+template<class T>
+ListaDE<T> &ListaDE<T>::operator=(const ListaDE &lista) {
+    if (this != &lista) {
+        if (this->cabecera != nullptr) {     //Realizamos el proceso de borrado si la lista no está vacía
+            Iterador i = this->cola;
+            this->cola = nullptr;           //Establecemos la cabecera y la cola a null
+            this->cabecera = nullptr;
+            while (i.hayAnterior()) {       //Borramos toda la lista que queremos sustituir
+                i.anterior();
+                delete i.nodo->sig;
+            }
+            delete i.nodo;
+        }
+
+        if (lista.cabecera == nullptr) {
+            this->cabecera = nullptr;
+            this->cola = nullptr;
+
+        } else if (lista.cabecera == lista.cola) {            //Comprobamos si hay un solo elemento en la lista
+            this->cabecera = new Nodo(lista.cabecera->dato,0,0);
+            this->cola = cabecera;
+
+        } else {
+            this->cabecera = new Nodo(lista.cabecera->dato,0,0);
+            this->cola = cabecera;
+            Iterador i = lista.cabecera->sig;
+
+            while (i.haySiguiente()) {      //La condicion deja fuera al ultimo dato
+                insertaFin(i.dato());
+                i.siguiente();
+            }
+            insertaFin(i.dato());       //El ultmo dato hay que hacerlo aparte
+        }
+
+    }
+    return *this;
+}
+
 template<typename T>
 T& ListaDE<T>::inicio() {
     if (cabecera==nullptr) {
@@ -167,10 +228,10 @@ template<typename T>
 void ListaDE<T>::insertaInicio(const T& dato) {
     Nodo *p = new Nodo(dato,0,0);
 
-    if (cola==nullptr) {
+    if (cola==nullptr) {        //Comprobar si la lista esta vacia
         cabecera = p;
         cola=p;
-    } else {
+    } else {                    //Insertar por la cabecera
         p->sig=cabecera;
         cabecera->ant=p;
         cabecera=p;
@@ -183,40 +244,39 @@ template<typename T>
 void ListaDE<T>::insertaFin(const T &dato) {
     Nodo *p = new Nodo(dato,0,0);
 
-    if (cola==nullptr) {
+    if (cola==nullptr) {       //Comprobar si la lista esta vacia
         cabecera = p;
         cola=p;
-    } else {
+    } else {                   //Insertar por la cola
         p->ant=cola;
         cola->sig=p;
         cola=p;
-        p=nullptr;
     }
 }
 
 template<typename T>
 void ListaDE<T>::inserta(const Iterador &i, const T &dato) {
-    Nodo *p = new Nodo(dato,0,0);
     if (i.nodo==nullptr) {
         throw invalid_argument("[ListaDE::inserta]: Parametro no valido");
     }
-    if (cabecera==nullptr) {
+    Nodo *p = new Nodo(dato,0,0);
+    if (cabecera==nullptr) {            //Comprobar si la lista esta vacia
         cabecera=p;
         cola=p;
 
-    } else if (i.nodo==cabecera) {
+    } else if (i.nodo==cabecera) {      //Comprobar si el iterador apunta a la cabecera
         cabecera->ant=p;
         p->sig=cabecera;
         cabecera=p;
 
-        } else if (i.nodo==cola) {
+        } else if (i.nodo==cola) {      //Comprobar si el iterador apunta a la cola
             Nodo *t = cola->ant;
             cola->ant=p;
             p->sig=cola;
             p->ant=t;
             t->sig=p;
 
-            } else {
+            } else {                    //Posicion intermedia en lista con varios elementos
                 Nodo *t = i.nodo->ant;
                 i.nodo->ant=p;
                 p->sig=i.nodo;
@@ -225,6 +285,74 @@ void ListaDE<T>::inserta(const Iterador &i, const T &dato) {
             }
 }
 
+template<typename T>
+void ListaDE<T>::borraInicio() {
+    if (cabecera == nullptr) {      //Comprobamos si la lista esta vacia
+        throw out_of_range("[ListaDE::borraInicio]: No hay elementos para borrar en la lista");
+    }
+
+    Nodo *p = cabecera;
+    if (cabecera==cola) {           //Comprobamos si solo hay un elemento en la lista
+        cabecera=nullptr;
+        cola=nullptr;
+
+    } else {                        //Hay mas de un elemento en la lista
+        cabecera=cabecera->sig;
+        cabecera->ant=nullptr;
+    }
+
+    delete p;
+}
+
+template<typename T>
+void ListaDE<T>::borraFinal() {
+    if (cabecera == nullptr) {      //Comprobamos si la lista esta vacia
+        throw out_of_range("[ListaDE::borraFinal]: No hay elementos para borrar en la lista");
+    }
+
+    Nodo *p = cola;
+    if (cabecera == cola) {         //Comprobamos si solo hay un elemento en la lista
+        cabecera=nullptr;
+        cola=nullptr;
+
+    } else {                        //Hay mas de un elemento en la lista
+        cola=cola->ant;
+        cola->sig=nullptr;
+    }
+
+    delete p;
+}
+
+template<class T>
+void ListaDE<T>::borra(const Iterador &i) {
+    if (i.nodo == nullptr) {        //Comprobamos que el iterador apunte a un nodo
+        throw invalid_argument("[ListaDE::borra]: No hay elementos para borrar en la lista");
+    }
+    if (cabecera == nullptr) {      //Comprobamos si la lista esta vacia
+        throw out_of_range("[ListaDE::borra]: Iterador invalido");
+    }
+
+    Nodo *p = i.nodo->sig;
+    Nodo *t = i.nodo->ant;
+    if (cabecera == cola) {         //Comprobamos si solo hay un elemento en la lista
+        cabecera = nullptr;
+        cola = nullptr;
+
+    } else if (i.nodo == cabecera) {
+        cabecera=p;
+        cabecera->ant=nullptr;
+
+    } else if (i.nodo == cola) {
+        cola = t;
+        cola->sig = nullptr;
+
+    } else {
+        t->sig = p;
+        p->ant = t;
+    }
+
+    delete i.nodo;
+}
 
 
 /*  Metodo borrar,orden corecto
