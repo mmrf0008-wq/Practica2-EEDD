@@ -354,14 +354,44 @@ void ListaDE<T>::borra(const Iterador &i) {
     delete i.nodo;
 }
 
+template<class T>
+int ListaDE<T>::tam() {
+    int num=0;
+    if (cabecera != nullptr) {          //Comprobar si la lista está vacía
+        Iterador i = cabecera;
 
-/*  Metodo borrar,orden corecto
- *if p.nodo!=0 && cabecera !=0
- *  else if Cabecera==cola
- *      else if p.nodo==cabecera
- *          else if p.nodo==cola
- *              else
- */
+        while (i.haySiguiente() != nullptr) {
+            i.siguiente();
+            num++;
+        }
+        num++;
+    }
+    return num;
+}
 
-//
+template<class T>
+ListaDE<T>::~ListaDE() {
+    while (cabecera != nullptr) {
+        borraFinal();
+    }
+}
+
+template<class T>
+ListaDE<T> ListaDE<T>::operator+(const ListaDE<T> &lista) {
+    ListaDE<T> listaNueva(*this);                       //Creamos una lista nueva por copia que contenga a la primera
+    Iterador i = lista.cabecera;
+    while (i.nodo != nullptr) {                 //Añadimos a esta nueva lista, la segunda
+        listaNueva.insertaFin(i.dato());
+        i.siguiente();
+    }
+    return listaNueva;     //Devolvemos una nueva lista con los contenidos tanto de la primera como de la segunda juntos
+}
+
+template<class T>
+ListaDE<T> ListaDE<T>::concatena(const ListaDE<T> &lista) {     //Es lo mismo que un += (this = this + lista)
+    //Se modifica la lista this
+    //Con la otra no se que leches hay q hacer
+    //No se si se devuelve la lista this o qué
+}
+
 #endif //PRACTICA2_EEDD_LISTADE_H
