@@ -228,7 +228,6 @@ void ListaDE<T>::insertaInicio(const T& dato) {
         p->sig=cabecera;
         cabecera->ant=p;
         cabecera=p;
-        p=nullptr;
     }
 
 }
