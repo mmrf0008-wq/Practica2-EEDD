@@ -173,15 +173,8 @@ ListaDE<T>::ListaDE(const ListaDE<T> &orig) {       //Comprobamos si la lista es
 template<class T>
 ListaDE<T> &ListaDE<T>::operator=(const ListaDE &lista) {
     if (this != &lista) {
-        if (this->cabecera != nullptr) {     //Realizamos el proceso de borrado si la lista no está vacía
-            Iterador i = this->cola;
-            this->cola = nullptr;           //Establecemos la cabecera y la cola a null
-            this->cabecera = nullptr;
-            while (i.hayAnterior()) {       //Borramos toda la lista que queremos sustituir
-                i.anterior();
-                delete i.nodo->sig;
-            }
-            delete i.nodo;
+        while (this->cola != nullptr) {       //Borramos toda la lista que queremos sustituir
+            this->borraInicio();
         }
 
         if (lista.cabecera == nullptr) {
