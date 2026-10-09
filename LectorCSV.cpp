@@ -16,7 +16,7 @@
  * @param rutaFichero Ruta del fichero CSV a leer.
  * @return true si el fichero se ha podido abrir, false en caso contrario.
  */
-bool LectorCSV::cargar(VDinamico<Especie> &vector, const std::string& rutaFichero) {
+bool LectorCSV::cargarEspecies(VDinamico<Especie*> &vector, const std::string& rutaFichero) {
     filasDescartadas_ = 0;
 
     std::ifstream fichero(rutaFichero);
@@ -45,7 +45,7 @@ bool LectorCSV::cargar(VDinamico<Especie> &vector, const std::string& rutaFicher
         nombreComun = extraerCampo(linea, 1);
         nombreCientifico = extraerCampo(linea, 2);
         tipoPlanta = extraerCampo(linea, 3);
-        vector.insertar(Especie(codigo, nombreComun, nombreCientifico,tipoPlanta));
+        vector.insertar(new Especie(codigo, nombreComun, nombreCientifico,tipoPlanta));
 
     }
     numeroEspecies_= vector.getLogico();
@@ -186,4 +186,41 @@ void LectorCSV::mostrarEspecie(const Especie& especie) {
     std::cout << " - [" << especie.get_codigo_especie() << "] " << especie.get_nombre_comun()
               << " (" << especie.get_nombre_cientifico() << ") - "
               << especie.get_tipo_planta() << "\n";
+}
+
+bool  LectorCSV::cargarParques(ListaDE<Parque > &parques, const std::string &rutaFichero) {
+    filasDescartadas_ = 0;
+
+    std::ifstream fichero(rutaFichero);
+    if (!fichero.is_open()) {
+        return false;
+    }
+
+    std::string linea;
+    if (std::getline(fichero, linea)) {
+        eliminarBOM(linea);
+    }
+
+    //Declaradas fuera del bucle por eficiencia
+
+    while (std::getline(fichero, linea)) {
+        if (linea.empty()) {
+            continue;
+        }
+
+        if (contarCampos(linea) != 4) {
+            ++filasDescartadas_;
+            continue;
+        }
+
+        int codigo_parque;              //Id de parque
+        string nombre_parque;
+
+        codigo_parque = stoi(extraerCampo(linea, 0));
+        nombre_parque = extraerCampo(linea, 1);
+        parques.insertaFin( Parque(codigo_parque,nombre_parque));
+
+    }
+    numeroEspecies_= parques.tam();
+    return true;
 }

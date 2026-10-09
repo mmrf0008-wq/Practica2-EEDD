@@ -5,6 +5,8 @@
 #include <string>
 
 #include "Especie.h"
+#include "ListaDE.h"
+#include "Parque.h"
 #include "VDinamico.h"
 
 // Lee el fichero data/arbolado-especies.csv: valores separados por comas,
@@ -17,19 +19,22 @@
 // utiliza std::vector ni ninguna otra estructura de datos en ningún punto.
 class LectorCSV {
 public:
-    bool cargar(VDinamico<Especie> &vector, const std::string& rutaFichero);
+    bool static  cargarEspecies(VDinamico<Especie*> &vector, const std::string& rutaFichero);
+    bool static cargarParques(ListaDE<Parque> &parques, const std::string &rutaFichero);
 
     std::size_t numeroEspecies() const;
     std::size_t filasDescartadas() const;
 
 private:
-    std::size_t numeroEspecies_ = 0;
-    std::size_t filasDescartadas_ = 0;
+    std::size_t static numeroEspecies_;
+    std::size_t static filasDescartadas_;
 
     static std::size_t contarCampos(const std::string& linea);
     static std::string extraerCampo(const std::string& linea, std::size_t indiceObjetivo);
     static void eliminarBOM(std::string& linea);
     static void mostrarEspecie(const Especie& especie);
+
+
 };
 
 #endif // LECTOR_CSV_H
