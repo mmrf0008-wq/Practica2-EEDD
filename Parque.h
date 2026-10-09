@@ -10,12 +10,13 @@ using namespace std;
 
 class Parque {
 private:
-    int codigo_parque;
+    int codigo_parque;                  //Id de parque
     string nombre_parque;
-    VDinamico<Especie*> contenedor;
+    VDinamico<Especie*> contenedor;     // Especies que hay en el parque
+
 public:
     Parque();
-    Parque(int codigo,const string &nombre);
+    Parque(int codigo,const string &nombre,const VDinamico<Especie*> &especies);
     ~Parque();
 
     int getCodigoParque()const;
@@ -23,7 +24,7 @@ public:
     string getNombreParque()const;
     void setNombreParque(const string &nombre);
 
-    void insertarEspecie(const Especie& esp);
+    void insertarEspecie(Especie *esp);
     bool existeNComun(const string &nombre);
     bool existeNCientifico(const string &nombre);
 };
