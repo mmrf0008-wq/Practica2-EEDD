@@ -139,7 +139,7 @@ public:
 
 
     ListaDE<T> concatena(const ListaDE<T> &lista);      //Devuelve una copia de las dos listas unidas
-    ListaDE<T> operator+(const ListaDE<T> &lista);      //A la primera lista le agrego la segunda lista
+    ListaDE<T>& operator+(const ListaDE<T> &lista);      //A la primera lista le agrego la segunda lista
 
     /**
      * @brief Destructor de la clase ListaDE
@@ -367,21 +367,41 @@ ListaDE<T>::~ListaDE() {
 }
 
 template<class T>
-ListaDE<T> ListaDE<T>::operator+(const ListaDE<T> &lista) {
-    ListaDE<T> listaNueva(*this);                       //Creamos una lista nueva por copia que contenga a la primera
-    Iterador i = lista.cabecera;
-    while (i.nodo != nullptr) {                 //Añadimos a esta nueva lista, la segunda
-        listaNueva.insertaFin(i.dato());
-        i.siguiente();
+ListaDE<T>& ListaDE<T>::operator+(const ListaDE<T> &lista) {
+    if (lista.cabecera != nullptr) {
+        Iterador i = lista.cabecera;
+        while (i.nodo != nullptr) {
+            this->insertaFin(i.dato());
+            i.siguiente();
+        }
     }
+
+    return *this;
+}
+
+template<class T>
+ListaDE<T> ListaDE<T>::concatena(const ListaDE<T> &lista) {
+    ListaDE<T> listaNueva;                       //Creamos una lista nueva por copia que contenga a la primera
+    if (this->cabecera == nullptr) {
+        listaNueva(lista);
+    } else if (lista.cabecera == nullptr){
+        listaNueva(this);
+    } else {
+        listaNueva(this);
+        Iterador i = lista.cabecera;
+        while (i.nodo != nullptr) {                 //Añadimos a esta nueva lista, la segunda
+            listaNueva.insertaFin(i.dato());
+            i.siguiente();
+        }
+    }
+
     return listaNueva;     //Devolvemos una nueva lista con los contenidos tanto de la primera como de la segunda juntos
 }
 
 template<class T>
-ListaDE<T> ListaDE<T>::concatena(const ListaDE<T> &lista) {     //Es lo mismo que un += (this = this + lista)
-    //Se modifica la lista this
-    //Con la otra no se que leches hay q hacer
-    //No se si se devuelve la lista this o qué
+typename ListaDE<T>::Iterador ListaDE<T>::iterador() {
+    return Iterador(cabecera);
 }
+
 
 #endif //PRACTICA2_EEDD_LISTADE_H
