@@ -10,9 +10,9 @@ using namespace std;
 
 class Parque {
 private:
-    int codigo_parque;
+    int codigo_parque;              //Id de parque
     string nombre_parque;
-    VDinamico<Especie*> contenedor;
+    VDinamico<Especie*> contenedor;     //Especies que hay en el parque
 public:
     Parque();
     Parque(int codigo,const string &nombre);
