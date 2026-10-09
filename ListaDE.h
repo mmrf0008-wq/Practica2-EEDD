@@ -32,19 +32,19 @@ public:
         Iterador(Nodo *nodo): nodo(nodo){}
 
         bool hayAnterior() {           //Comprobar si existe un nodo anterior
-            if (nodo->ant != 0) {
+            if (nodo->ant != nullptr) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
+            return false;
+            
         }
 
         bool haySiguiente() {               //Comprobar si existe un nodo siguiente
-            if (nodo->sig != 0) {
+            if (nodo->sig != nullptr) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
+            return false;
+            
         }
 
         void anterior() {               //Desplaza el iterador una posicion hacia atrás. Puntero nodo apunta al nodo anterior
@@ -63,7 +63,7 @@ public:
     /**
      * @brief Constructor por defecto de una lista doblemente enlazada
      */
-    ListaDE<T>():cabecera(0),cola(0){}
+    ListaDE<T>():cabecera(nullptr),cola(nullptr){}
 
     /**
      * Constructor por copia de uan lista doblemente enlazada
@@ -110,8 +110,8 @@ public:
 
     /**
      * @brief Insertar un dato en la posicion anterior apuntada por un iterador
-     * @param i
-     * @param dato
+     * @param i iterador, apunta a la posición a partir de la cual se hará la inserción
+     * @param dato objeto a insertar
      */
     void inserta(const Iterador &i,const T &dato);
 
@@ -152,13 +152,11 @@ ListaDE<T>::ListaDE(const ListaDE<T> &orig) {       //Comprobamos si la lista es
     if (orig.cabecera == nullptr) {
         this->cabecera = nullptr;
         this->cola = nullptr;
-
     } else if (orig.cabecera == orig.cola) {            //Comprobamos si hay un solo elemento en la lista
-        this->cabecera = new Nodo(orig.cabecera->dato,0,0);
+        this->cabecera = new Nodo(orig.cabecera->dato,nullptr,nullptr);
         this->cola = cabecera;
-
-    } else {
-        this->cabecera = new Nodo(orig.cabecera->dato,0,0);
+    } else { //hay mas de un elemetno
+        this->cabecera = new Nodo(orig.cabecera->dato,nullptr,nullptr);
         this->cola = cabecera;
         Iterador i = orig.cabecera->sig;
 
@@ -173,20 +171,20 @@ ListaDE<T>::ListaDE(const ListaDE<T> &orig) {       //Comprobamos si la lista es
 template<class T>
 ListaDE<T> &ListaDE<T>::operator=(const ListaDE &lista) {
     if (this != &lista) {
-        while (this->cola != nullptr) {       //Borramos toda la lista que queremos sustituir
+        while (this->cola != nullptr) {       //Limpiamos la cola antes de sustituir
             this->borraInicio();
         }
 
-        if (lista.cabecera == nullptr) {
+        if (lista.cabecera == nullptr) { //no hay elementos
             this->cabecera = nullptr;
             this->cola = nullptr;
 
         } else if (lista.cabecera == lista.cola) {            //Comprobamos si hay un solo elemento en la lista
-            this->cabecera = new Nodo(lista.cabecera->dato,0,0);
+            this->cabecera = new Nodo(lista.cabecera->dato,nullptr,nullptr);
             this->cola = cabecera;
 
         } else {
-            this->cabecera = new Nodo(lista.cabecera->dato,0,0);
+            this->cabecera = new Nodo(lista.cabecera->dato,nullptr,nullptr);
             this->cola = cabecera;
             Iterador i = lista.cabecera->sig;
 
@@ -219,7 +217,7 @@ T& ListaDE<T>::fin() {
 
 template<typename T>
 void ListaDE<T>::insertaInicio(const T& dato) {
-    Nodo *p = new Nodo(dato,0,0);
+    Nodo *p = new Nodo(dato,nullptr,nullptr);
 
     if (cola==nullptr) {        //Comprobar si la lista esta vacia
         cabecera = p;
@@ -234,7 +232,7 @@ void ListaDE<T>::insertaInicio(const T& dato) {
 
 template<typename T>
 void ListaDE<T>::insertaFin(const T &dato) {
-    Nodo *p = new Nodo(dato,0,0);
+    Nodo *p = new Nodo(dato,nullptr,nullptr);
 
     if (cola==nullptr) {       //Comprobar si la lista esta vacia
         cabecera = p;
@@ -251,7 +249,7 @@ void ListaDE<T>::inserta(const Iterador &i, const T &dato) {
     if (i.nodo==nullptr) {
         throw invalid_argument("[ListaDE::inserta]: Parametro no valido");
     }
-    Nodo *p = new Nodo(dato,0,0);
+    Nodo *p = new Nodo(dato,nullptr,nullptr);
     if (cabecera==nullptr) {            //Comprobar si la lista esta vacia
         cabecera=p;
         cola=p;

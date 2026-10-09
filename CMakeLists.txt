@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.29.6)
 project(Practica2_EEDD)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -16,4 +16,5 @@ add_executable(Practica2_EEDD
         Parque.cpp
         Parque.h
         ControlParques.cpp
-        ControlParques.h)
+        ControlParques.h
+        VDinamico.h)
