@@ -1,6 +1,5 @@
 #include <iostream>
 #include <conio.h>
-
 #include "ControlParques.h"
 #include "LectorCSV.h"
 #include "ListaDE.h"
@@ -32,7 +31,7 @@ Iterador<Parque> buscaParque(ListaDE<Parque>& lista, string nombre)
 
 bool buscaEspecieNbrComun(VDinamico<Especie*>& vector, string nombreComun)
 {
-    int n = vector.gettLogico();
+    int n = vector.getLogico();
     for (int i = 0; i < n; ++i)
     {
         if (vector[i]->get_nombre_comun() == nombreComun)
@@ -45,7 +44,7 @@ bool buscaEspecieNbrComun(VDinamico<Especie*>& vector, string nombreComun)
 
 bool buscaEspecieNbrCientif(VDinamico<Especie*>& vector, string nombreCentif)
 {
-    int n = vector.gettLogico();
+    int n = vector.getLogico();
     for (int i = 0; i < n; ++i)
     {
         string s = vector[i]->get_nombre_cientifico();
@@ -104,7 +103,7 @@ int main()
     for (int i = 0; i < 10; ++i)
     {
         lista.borraInicio();
-        lista.borraFin();
+        lista.borraFinal();
     }
     mostrarLista(lista);
 
@@ -118,7 +117,7 @@ int main()
     VDinamico<Especie>* especies = &cp.get_varieties();
     ListaDE<Parque>* parques = &cp.get_parks();
 
-    for (int i = 0; i < especies->gettLogico(); ++i)
+    for (int i = 0; i < especies->getLogico(); ++i)
     {
         Iterador<Parque> it = parques->iterador();
         Especie& esp = (*especies)[i];
@@ -221,7 +220,7 @@ int main()
     }
 
     cout<< endl<<"BUSCAR ESPECIES CON LA SUBCADENA ROSA EN SU NOMBRE CIENTÍFICO"<<endl;
-    for (int i =0; i < especies->gettLogico(); ++i)
+    for (int i =0; i < especies->getLogico(); ++i)
     {
         string ncientif = (*especies)[i].get_nombre_cientifico();
         if (ncientif.find("rosa") != string::npos)
@@ -236,7 +235,7 @@ int main()
     for (it; !it.fin(); it.avanza())
     {
        VDinamico<Especie*>  esp = it.getdato().get_contains();
-        for (int i =0; i < esp.gettLogico(); ++i)
+        for (int i =0; i < esp.getLogico(); ++i)
         {
             string nombreComun = esp[i]->get_nombre_comun();
             if (nombreComun.find("Abeto") != string::npos)
