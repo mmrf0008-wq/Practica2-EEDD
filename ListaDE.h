@@ -138,7 +138,7 @@ public:
     int tam();
 
 
-    ListaDE<T> concatena(const ListaDE<T> &lista);      //Devuelve una copia de las dos listas unidas
+    ListaDE<T> &concatena(const ListaDE<T> &lista);      //Devuelve una copia de las dos listas unidas
     ListaDE<T>& operator+(const ListaDE<T> &lista);      //A la primera lista le agrego la segunda lista
 
     /**
@@ -319,26 +319,26 @@ void ListaDE<T>::borra(const Iterador &i) {
         throw invalid_argument("[ListaDE::borra]: No hay elementos para borrar en la lista");
     }
     if (cabecera == nullptr) {      //Comprobamos si la lista esta vacia
-        throw out_of_range("[ListaDE::borra]: Iterador invalido");
+        throw out_of_range("[ListaDE::borra]: no hay elementos en la lista para borrar ");
     }
 
-    Nodo *p = i.nodo->sig;
-    Nodo *t = i.nodo->ant;
+    Nodo *siguiente = i.nodo->sig;
+    Nodo *anterior = i.nodo->ant;
     if (cabecera == cola) {         //Comprobamos si solo hay un elemento en la lista
         cabecera = nullptr;
         cola = nullptr;
 
     } else if (i.nodo == cabecera) {
-        cabecera=p;
+        cabecera=siguiente;
         cabecera->ant=nullptr;
 
     } else if (i.nodo == cola) {
-        cola = t;
+        cola = anterior;
         cola->sig = nullptr;
 
     } else {
-        t->sig = p;
-        p->ant = t;
+        anterior->sig = siguiente;
+        siguiente->ant = anterior;
     }
 
     delete i.nodo;
@@ -380,13 +380,13 @@ ListaDE<T>& ListaDE<T>::operator+(const ListaDE<T> &lista) {
 }
 
 template<class T>
-ListaDE<T> ListaDE<T>::concatena(const ListaDE<T> &lista) {
+ListaDE<T>& ListaDE<T>::concatena(const ListaDE<T> &lista) {
     ListaDE<T> listaNueva;                       //Creamos una lista nueva por copia que contenga a la primera
-    if (this->cabecera == nullptr) {
+    if (this->cabecera == nullptr) { // si la lista actual esta vacia copiamos unicamente los nodos de las lista del parametro
         listaNueva(lista);
-    } else if (lista.cabecera == nullptr){
+    } else if (lista.cabecera == nullptr){ // si la lista del parametro esta vacia copiamos unicamente los valores de la lista actual
         listaNueva(this);
-    } else {
+    } else { //ambas tienen valores
         listaNueva(this);
         Iterador i = lista.cabecera;
         while (i.nodo != nullptr) {                 //Añadimos a esta nueva lista, la segunda
@@ -395,7 +395,7 @@ ListaDE<T> ListaDE<T>::concatena(const ListaDE<T> &lista) {
         }
     }
 
-    return listaNueva;     //Devolvemos una nueva lista con los contenidos tanto de la primera como de la segunda juntos
+    return *listaNueva;     //Devolvemos una nueva lista con los contenidos tanto de la primera como de la segunda juntos
 }
 
 template<class T>
